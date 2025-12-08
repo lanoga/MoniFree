@@ -1,0 +1,56 @@
+{
+  "name": "startvue3",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
+    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.{js,vue}": [
+      "npx prettier --write",
+      "npm run lint"
+    ]
+  },
+  "dependencies": {
+    "@bhplugin/vue3-datatable": "^1.1.1",
+    "@vueuse/core": "^11.0.0",
+    "axios": "^1.7.7",
+    "pinia": "^2.2.6",
+    "pinia-plugin-persistedstate": "^3.2.2",
+    "vee-validate": "^4.15.0",
+    "vue": "^3.5.12",
+    "vue-i18n": "^9.14.1",
+    "vue-router": "^4.4.3",
+    "vue-toastification": "^2.0.0-rc.5",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.7.2",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.20",
+    "cypress": "^14.0.3",
+    "eslint": "^9.13.0",
+    "eslint-plugin-cypress": "^3.0.0",
+    "eslint-plugin-vue": "^9.30.0",
+    "husky": "^4.3.8",
+    "jsdom": "^24.1.2",
+    "lint-staged": "^15.2.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "sass": "^1.82.0",
+    "start-server-and-test": "^2.0.3",
+    "tailwindcss": "^3.4.16",
+    "vite": "^6.0.3",
+    "vitest": "^1.6.1"
+  }
+}

@@ -1,0 +1,152 @@
+<script setup>
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
+import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toastification'
+
+import httpClient from '@/services/httpClient'
+import useServerValidation from '@/composables/useServerValidation'
+import BaseModal from '@/components/BaseModal.vue'
+
+const { show, user } = defineProps({ show: Boolean, user: Object })
+const emit = defineEmits(['close'])
+
+const { handleFormErrors } = useServerValidation()
+const { t } = useI18n()
+const toast = useToast()
+
+const schema = yup.object({
+  firstName: yup.string(t('validations.string')).required(t('validations.required')),
+  lastName: yup.string(t('validations.string')).required(t('validations.required')),
+  email: yup.string(t('validations.string')).email(t('validations.email')).required(t('validations.required')),
+})
+
+const defaultValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+}
+
+const { errors, handleSubmit, defineInputBinds, resetForm, isSubmitting, setFieldError } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    ...defaultValues,
+    ...user,
+  },
+})
+
+const email = defineInputBinds('email')
+const firstName = defineInputBinds('firstName')
+const lastName = defineInputBinds('lastName')
+
+const createUser = data => {
+  return httpClient
+    .post('/users', data)
+    .then(() => {
+      resetForm()
+      emit('close', data)
+      toast.success(`Sikeresen létrehozta a felhasználót!`)
+    })
+    .catch(error => {
+      const { error: formErrors } = error.response?.data || {}
+
+      if (formErrors) {
+        handleFormErrors(formErrors, setFieldError)
+      }
+
+      toast.error(`Hiba történt a felhasználó létrehozása közben!`)
+    })
+}
+
+const updateUser = data => {
+  return httpClient
+    .patch(`/users/${user.id}`, data)
+    .then(() => {
+      emit('close', data)
+      toast.success(`Sikeresen módosította ${user.lastName} ${user.firstName} felhasználót!`)
+    })
+    .catch(() => {
+      toast.error(`Hiba történt a felhasználó módosítása közben!`)
+    })
+}
+
+const onSubmit = handleSubmit(values => {
+  if (user && user.id) {
+    updateUser(values)
+  } else {
+    createUser(values)
+  }
+})
+</script>
+
+<template>
+  <BaseModal :show="show">
+    <div>
+      <h3 class="mb-10 text-xl font-semibold text-black dark:text-white text-center">Felhasználó létrehozása</h3>
+      <form @submit="onSubmit">
+        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+          <div class="w-full xl:w-1/2">
+            <label class="mb-2.5 block text-black dark:text-white">Keresztnév</label>
+            <input
+              v-bind="firstName"
+              type="text"
+              placeholder="Minta"
+              :class="`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+                errors.firstName ? 'border-meta-1' : 'border-stroke'
+              }`"
+            />
+            <div class="mt-2 text-meta-1 text-xs">
+              {{ errors.firstName }}
+            </div>
+          </div>
+          <div class="w-full xl:w-1/2">
+            <label class="mb-2.5 block text-black dark:text-white"> Vezetéknév </label>
+            <input
+              v-bind="lastName"
+              type="text"
+              placeholder="János"
+              :class="`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+                errors.lastName ? 'border-meta-1' : 'border-stroke'
+              }`"
+            />
+            <div class="mt-2 text-meta-1 text-xs">
+              {{ errors.lastName }}
+            </div>
+          </div>
+        </div>
+        <div class="mb-4.5">
+          <label class="mb-2.5 block text-black dark:text-white"> E-mail cím </label>
+          <input
+            v-bind="email"
+            type="email"
+            placeholder="mintajanos@gmail.com"
+            :class="`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
+              errors.email ? 'border-meta-1' : 'border-stroke'
+            }`"
+          />
+          <div class="mt-2 text-meta-1 text-xs">
+            {{ errors.email }}
+          </div>
+        </div>
+        <div class="flex justify-end gap-4.5 mt-8">
+          <button
+            @click="$emit('close')"
+            class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+            type="submit"
+          >
+            Mégse
+          </button>
+          <button
+            :disabled="isSubmitting"
+            class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
+            type="submit"
+          >
+            Mentés
+          </button>
+        </div>
+      </form>
+    </div>
+  </BaseModal>
+</template>
+
+<style scoped></style>

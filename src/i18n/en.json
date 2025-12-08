@@ -1,0 +1,30 @@
+{
+  "login": {
+    "title": "Login",
+    "action": "Sign In"
+  },
+  "labels": {
+    "email": "Email",
+    "pasword": "Password"
+  },
+  "validations": {
+    "required": "A mező kitöltése kötelező",
+    "string": "A mező formátuma nem megfelelő",
+    "passwordStrength": "A jelszónak minimum 8 karakter hosszúnak kell lennie és tartalmaznia legalább 1 nagy betű, 1 kis betű, 1 speciális karakter és 1 számot",
+    "passwordMismatch": "A jelszavak nem egyeznek",
+    "email": "Helytelen formátumú email cím",
+    "login": "Hibás azonosító vagy jelszó",
+    "phoneNumber": "Helytelen formátumú telefonszám",
+    "minLength": "A mező tartalma túl rövid",
+    "maxLength": "A mező tartalma túl hosszú"
+  },
+  "logout": "Log Out",
+  "generalError": {
+    "sessionExpired": "A munkamenet lejárt. Kérem, jelentkezzen be újra!",
+    "notAuthorized": "Nincs engedélye az oldal vagy művelet eléréséhez!",
+    "server": "Szerver hiba történt!"
+  },
+  "users": {
+    "title": "Users"
+  }
+}
