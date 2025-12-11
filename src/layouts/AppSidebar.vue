@@ -35,7 +35,7 @@ onKeyDown('Escape', event => {
   >
     <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
       <a href="/" class="flex items-center">
-        <h1 class="text-title-xl font-semibold text-white">Vue3 Starter</h1>
+        <h1 class="text-title-xl font-semibold text-white">MoniFree</h1>
       </a>
 
       <button
@@ -64,7 +64,7 @@ onKeyDown('Escape', event => {
     <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
       <nav class="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
         <div>
-          <h3 class="mb-4 ml-4 text-sm font-semibold text-bodydark2">MENU</h3>
+          <h3 class="mb-4 ml-4 text-sm font-semibold text-bodydark2">Menü</h3>
 
           <ul v-if="auth.menus && auth.menus.length" class="mb-6 flex flex-col gap-1.5">
             <li v-for="menuItem in auth.menus" :key="menuItem.id">

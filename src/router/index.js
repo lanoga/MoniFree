@@ -41,6 +41,22 @@ const router = createRouter({
       },
       component: () => import(/* webpackChunkName: "users" */ '../views/UsersPage.vue'),
     },
+    {
+      path: '/services',
+      name: 'services',
+      meta: {
+        layout: DefaultLayout,
+      },
+      component: () => import(/* webpackChunkName: "services" */ '../views/ServicesPage.vue'),
+    },
+    {
+      path: '/logs',
+      name: 'logs',
+      meta: {
+        layout: DefaultLayout,
+      },
+      component: () => import(/* webpackChunkName: "logs" */ '../views/LogsPage.vue'),
+    },
   ],
 })
 

@@ -26,5 +26,11 @@
   },
   "users": {
     "title": "Felhasználók"
+  },
+  "services": {
+    "title": "Szolgáltatások"
+  },
+  "logs": {
+    "title": "Naplók"
   }
 }
