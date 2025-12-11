@@ -33,7 +33,7 @@ const onSubmit = handleSubmit(values => {
   auth.loading = true
 
   return httpClient
-    .post('/login', values)
+    .post('/moni/login', values)
     .then(response => {
       const { accessToken, userData } = response.data
 
