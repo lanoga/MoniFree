@@ -2,18 +2,8 @@
 import { ref, onMounted, reactive } from 'vue'
 import DataTable from '@bhplugin/vue3-datatable'
 import '@bhplugin/vue3-datatable/dist/style.css'
-import { useToast } from 'vue-toastification'
-
 import httpClient from '@/services/httpClient'
-import EyeIcon from '@/icons/EyeIcon.vue'
-import TrashIcon from '@/icons/TrashIcon.vue'
-import { hasPermission } from '@/services/role'
-import { useCollections, COLLECTION_TYPES } from '@/stores/collections'
 
-const toast = useToast()
-const collectionStore = useCollections()
-
-const showModal = ref(false)
 const loading = ref(true)
 const totalRows = ref(0)
 const params = reactive({

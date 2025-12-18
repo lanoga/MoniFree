@@ -9,7 +9,10 @@ import { useAuth } from '@/stores/auth'
 
 const router = useRouter()
 const auth = useAuth()
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
+const { locale } = useI18n({ useScope: 'global' })
+console.log('LOCALE VALUE:', locale.value)
+console.log('LOCALE TYPE:', typeof locale.value)
 
 const dropdownOpen = ref(false)
 const dropdown = ref(null)
@@ -40,7 +43,6 @@ const logout = async () => {
     auth.removeAuthUser()
     auth.loading = false
     auth.menus = []
-    auth.permission = []
     router.push('/login')
   } catch (error) {
     auth.loading = false
@@ -109,7 +111,7 @@ const logout = async () => {
             fill=""
           />
         </svg>
-        {{ t('logout') }}
+          {{ t?.('logout') }}
       </button>
     </div>
   </div>

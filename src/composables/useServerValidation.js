@@ -1,7 +1,7 @@
 import { useI18n } from 'vue-i18n'
 
 const useServerValidation = () => {
-  const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 
   const getValidationMessages = field => {
     const messages = Object.keys(field).map(key => t(`validations.${key}`))

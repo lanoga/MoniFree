@@ -8,50 +8,47 @@ const { locale } = useI18n({ useScope: 'global' })
 const dropdownOpen = ref(false)
 const dropdown = ref(null)
 const trigger = ref(null)
+
 const LANGUAGE_KEY = 'lang'
+
 const languages = [
-  {
-    i18nLang: 'hu',
-    label: 'Magyar',
-  },
-  {
-    i18nLang: 'en',
-    label: 'English',
-  },
+  { i18nLang: 'hu', label: 'Magyar' },
+  { i18nLang: 'en', label: 'English' },
 ]
 
-watch(
-  locale,
-  val => {
-    const currentLang = localStorage.getItem(LANGUAGE_KEY)
-    document.documentElement.setAttribute(LANGUAGE_KEY, val)
-    locale.value = currentLang
-  },
-  { immediate: true },
-)
+// 🔒 initialize ONCE
+const savedLang = localStorage.getItem(LANGUAGE_KEY)
+if (typeof savedLang === 'string') {
+  locale.value = savedLang
+}
 
-onClickOutside(
-  dropdown,
-  () => {
-    dropdownOpen.value = false
-  },
-  { ignore: [trigger] },
-)
-
-onKeyDown('Escape', event => {
-  event.preventDefault()
-  dropdownOpen.value = false
+// persist locale changes safely
+watch(locale, val => {
+  if (typeof val === 'string') {
+    localStorage.setItem(LANGUAGE_KEY, val)
+    document.documentElement.setAttribute('lang', val)
+  }
 })
 
 const setLanguage = lang => {
-  locale.value = lang
-  dropdownOpen.value = false
-  localStorage.setItem(LANGUAGE_KEY, lang)
+  if (typeof lang === 'string') {
+    locale.value = lang
+    dropdownOpen.value = false
+  }
 }
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
+
+onClickOutside(dropdown, () => {
+  dropdownOpen.value = false
+}, { ignore: [trigger] })
+
+onKeyDown('Escape', event => {
+  event.preventDefault()
+  dropdownOpen.value = false
+})
 </script>
 
 <template>
@@ -98,8 +95,9 @@ const toggleDropdown = () => {
       <ul class="flex flex-col gap-3 border-b border-stroke px-5 py-2.5 dark:border-strokedark">
         <li v-for="language in languages" :key="language.i18nLang">
           <button
-            :class="`flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base ${
-              locale === language.i18nLang ? 'text-primary hover:text-primary' : 'hover:text-boxdark'
+            :class="`flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out lg:text-base ${locale.value === language.i18nLang
+            ? 'text-primary hover:text-primary'
+            : 'hover:text-boxdark'
             }`"
             @click="setLanguage(language.i18nLang)"
           >

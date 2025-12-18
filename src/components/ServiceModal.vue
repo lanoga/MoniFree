@@ -7,7 +7,7 @@ import httpClient from "@/services/httpClient"
 import { useI18n } from "vue-i18n"
 import useServerValidation from "@/composables/useServerValidation"
 
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 const toast = useToast()
 const { handleFormErrors } = useServerValidation()
 

@@ -4,6 +4,7 @@ import { onClickOutside, onKeyDown } from '@vueuse/core'
 
 import { useAuth } from '@/stores/auth'
 import MenuItem from '@/components/MenuItem.vue'
+import { onMounted } from 'vue'
 
 const { sidebarOpen, setSidebarOpen } = defineProps({ sidebarOpen: Boolean, setSidebarOpen: Function })
 
@@ -23,6 +24,10 @@ onClickOutside(
 onKeyDown('Escape', event => {
   event.preventDefault()
   setSidebarOpen(false)
+})
+onMounted(() => {
+  auth.getMenus()
+  console.log(auth.menus)
 })
 </script>
 
@@ -64,11 +69,10 @@ onKeyDown('Escape', event => {
     <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
       <nav class="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
         <div>
-          <h3 class="mb-4 ml-4 text-sm font-semibold text-bodydark2">Menü</h3>
-
-          <ul v-if="auth.menus && auth.menus.length" class="mb-6 flex flex-col gap-1.5">
+          <h1 class="mb-4 ml-4 text-sm font-semibold text-bodydark2">Menü</h1>
+          <ul class="mb-6 flex flex-col gap-1.5">
             <li v-for="menuItem in auth.menus" :key="menuItem.id">
-              <MenuItem :title="menuItem.title" :href="menuItem.path" />
+              <MenuItem :title="menuItem.title" :href="menuItem.href" />
             </li>
           </ul>
         </div>
