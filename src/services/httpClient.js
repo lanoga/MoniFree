@@ -36,11 +36,6 @@ httpClient.interceptors.response.use(
         toast.warning(t('generalError.sessionExpired'))
         router.push('/login')
         break
-      case 403:
-        auth.removeAuthUser()
-        toast.error(t('generalError.notAuthorized'))
-        router.push('/not-authorized')
-        break
       case 500:
         toast.error(t('generalError.server'))
         break

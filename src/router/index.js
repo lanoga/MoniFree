@@ -25,16 +25,15 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "login" */ '../views/LoginPage.vue'),
     },
     {
-      path: '/not-authorized',
-      name: 'not-authorized',
+      path: '/moni/dashboard',
+      name: 'dashboard',
       meta: {
-        layout: BlankLayout,
-        redirectIfLoggedIn: true,
+        layout: DefaultLayout,
       },
-      component: () => import(/* webpackChunkName: "not-authorized" */ '../views/NotAuthorizedPage.vue'),
+      component: () => import(/* webpackChunkName: "logs" */ '../views/DashboardPage.vue'),
     },
     {
-      path: '/users',
+      path: '/moni/user',
       name: 'users',
       meta: {
         layout: DefaultLayout,
@@ -42,7 +41,7 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "users" */ '../views/UsersPage.vue'),
     },
     {
-      path: '/services',
+      path: '/moni/services',
       name: 'services',
       meta: {
         layout: DefaultLayout,
@@ -50,7 +49,7 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "services" */ '../views/ServicesPage.vue'),
     },
     {
-      path: '/logs',
+      path: '/moni/logs',
       name: 'logs',
       meta: {
         layout: DefaultLayout,

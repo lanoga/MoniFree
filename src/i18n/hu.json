@@ -21,7 +21,6 @@
   "logout": "Kijelentkezés",
   "generalError": {
     "sessionExpired": "A munkamenet lejárt. Kérem, jelentkezzen be újra!",
-    "notAuthorized": "Nincs engedélye az oldal vagy művelet eléréséhez!",
     "server": "Szerver hiba történt!"
   },
   "users": {
@@ -32,5 +31,8 @@
   },
   "logs": {
     "title": "Naplók"
+  },
+  "dashboard": {
+    "title": "Irányítópult"
   }
 }

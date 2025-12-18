@@ -1,2 +1,7 @@
-export { default as en } from './en.json'
-export { default as hu } from './hu.json'
+import hu from './hu'
+import en from './en'
+
+export default {
+  hu,
+  en,
+}

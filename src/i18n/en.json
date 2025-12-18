@@ -21,7 +21,6 @@
   "logout": "Log Out",
   "generalError": {
     "sessionExpired": "A munkamenet lejárt. Kérem, jelentkezzen be újra!",
-    "notAuthorized": "Nincs engedélye az oldal vagy művelet eléréséhez!",
     "server": "Szerver hiba történt!"
   },
   "users": {
