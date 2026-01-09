@@ -8,11 +8,8 @@ import httpClient from '@/services/httpClient'
 import EyeIcon from '@/icons/EyeIcon.vue'
 import TrashIcon from '@/icons/TrashIcon.vue'
 import UserModal from '@/components/UserModal.vue'
-import { hasPermission } from '@/services/role'
-import { useCollections, COLLECTION_TYPES } from '@/stores/collections'
 
 const toast = useToast()
-const collectionStore = useCollections()
 
 const showModal = ref(false)
 const loading = ref(true)
@@ -26,11 +23,10 @@ const params = reactive({
 const rows = ref(null)
 const cols =
   ref([
-    { field: 'id', title: 'ID', isUnique: true },
     { field: 'fullName', title: 'Név' },
     { field: 'email', title: 'E-mail' },
-    { field: 'country', title: 'Ország' },
-    { field: 'address', title: 'Cím' },
+    { field: 'role', title: 'Szerepkör' },
+    { field: 'twoFactorEnabled', title: 'Kétlépcsős hitelesítés' },
     {
       field: 'actions',
       title: 'Műveletek',
@@ -42,10 +38,9 @@ const getUsers = async () => {
   loading.value = true
 
   try {
-    const { data } = await httpClient.get('/users', { params })
-
-    rows.value = data?.data
-    totalRows.value = data?.meta?.total
+    const { data } = await httpClient.get('/moni/users')
+    rows.value = data
+    totalRows.value = data.length || 0
   } catch (error) {
     return Promise.reject(error)
   } finally {
@@ -65,9 +60,9 @@ const editUser = async user => {
 
 const deleteUser = async user => {
   try {
-    await httpClient.delete(`/users/${user.id}`)
+    await httpClient.delete(`/moni/users${user.id}`)
     await getUsers()
-    toast.success(`Sikeresen törölte ${user.lastName} ${user.firstName} felhasználót!`)
+    toast.success(`Sikeresen törölte ${user.familyName} ${user.firstName} felhasználót!`)
   } catch (error) {
     toast.error(`Hiba történt a felhasználó törlése közben!`)
     return Promise.reject(error)
@@ -91,12 +86,6 @@ const handleChange = data => {
   getUsers()
 }
 
-const getCountryNameByCode = code => {
-  const countries = collectionStore.getCollectionByKey(COLLECTION_TYPES.COUNTRIES)
-  const country = countries.find(country => country.code === code)
-  return country?.name || ''
-}
-
 onMounted(() => {
   getUsers()
 })
@@ -105,7 +94,6 @@ onMounted(() => {
 <template>
   <div class="flex justify-end mb-3">
     <button
-      v-if="hasPermission('CREATE_USER')"
       @click="addUser"
       class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
     >
@@ -126,29 +114,26 @@ onMounted(() => {
     class="users-table"
     @change="handleChange"
   >
-    <template #id="data">
-      <strong class="text-info">#{{ data.value.id }}</strong>
-    </template>
     <template #fullName="data">
       <div class="flex items-center gap-2">
-        <div class="font-semibold">{{ data.value.firstName + ' ' + data.value.lastName }}</div>
+        <div class="font-semibold">{{ data.value.familyName + ' ' + data.value.firstName }}</div>
       </div>
     </template>
-    <template #country="data">
-      <span>{{ getCountryNameByCode(data.value.address.country) }}</span>
-    </template>
-    <template #address="data">
-      <span>{{ `${data.value.address.zipcode} ${data.value.address.city}, ${data.value.address.street}` }}</span>
-    </template>
     <template #email="data">
-      <a :href="`mailto:${data.value.email}`" class="text-primary hover:underline">{{ data.value.email }}</a>
+      {{ data.value.email }}
+    </template>
+    <template #role="data">
+      {{ data.value.role }}
+    </template>
+    <template #twoFactorEnabled="data">
+      {{ data.value.twoFactorEnabled ? 'Igen' : 'Nem' }}
     </template>
     <template #actions="data">
       <div class="flex items-center space-x-3.5">
-        <button v-if="hasPermission('UPDATE_USER')" class="hover:text-primary" @click="editUser(data.value)">
+        <button class="hover:text-primary" @click="editUser(data.value)">
           <EyeIcon />
         </button>
-        <button v-if="hasPermission('DELETE_USER')" class="hover:text-primary" @click="deleteUser(data.value)">
+        <button class="hover:text-primary" @click="deleteUser(data.value)">
           <TrashIcon />
         </button>
       </div>

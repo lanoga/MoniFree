@@ -14,7 +14,7 @@ const { show, user } = defineProps({ show: Boolean, user: Object })
 const emit = defineEmits(['close'])
 
 const { handleFormErrors } = useServerValidation()
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 const toast = useToast()
 
 const schema = yup.object({
@@ -43,7 +43,7 @@ const lastName = defineInputBinds('lastName')
 
 const createUser = data => {
   return httpClient
-    .post('/users', data)
+    .post('/moni/users', data)
     .then(() => {
       resetForm()
       emit('close', data)
@@ -62,10 +62,10 @@ const createUser = data => {
 
 const updateUser = data => {
   return httpClient
-    .patch(`/users/${user.id}`, data)
+    .put(`/moni/users/${user.id}`, data)
     .then(() => {
       emit('close', data)
-      toast.success(`Sikeresen módosította ${user.lastName} ${user.firstName} felhasználót!`)
+      toast.success(`Sikeresen módosította ${user.familyName} ${user.firstName} felhasználót!`)
     })
     .catch(() => {
       toast.error(`Hiba történt a felhasználó módosítása közben!`)

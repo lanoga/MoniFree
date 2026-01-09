@@ -1,44 +1,46 @@
 import { defineStore } from 'pinia'
-
 import httpClient from '@/services/httpClient'
 
 export const useAuth = defineStore('auth', {
-  state: () => {
-    return {
-      userData: null,
-      accessToken: null,
-      menus: [],
-      loading: false,
-      permissions: [],
-    }
-  },
+  state: () => ({
+    accessToken: null,
+    menus: [],
+    loading: false,
+    userData: null,
+  }),
+
   getters: {
     isLoggedIn: state => !!(state.userData && state.accessToken),
   },
+
   actions: {
-    setAuthUser({ userData, accessToken }) {
-      this.userData = userData
+    setAuthUser({ accessToken }) {
       this.accessToken = accessToken
+      const savedData = {
+        accessToken: this.accessToken,
+        menus: this.menus,
+      }
+
+      localStorage.setItem('auth', JSON.stringify(savedData))
     },
+    setUser({ userData  }) {
+      this.userData = userData
+    },
+
     removeAuthUser() {
-      this.userData = null
       this.accessToken = null
       this.menus = []
+      this.userData = null
+
+      localStorage.removeItem('auth')
     },
+
     getMenus() {
-      return httpClient.get('/menus').then(response => {
-        const data = response?.data || []
-        this.menus = data
+      return httpClient.get('/get-menus').then(r => {
+        this.menus = (r.data ?? []).filter(m => m.href)
+        console.log('Menus fetched:', this.menus)
       })
-    },
-    getPermissions() {
-      return httpClient.get('/permissions').then(response => {
-        const data = response?.data || []
-        this.permissions = data
-      })
-    },
-  },
-  persist: {
-    paths: ['userData', 'accessToken', 'menus', 'permissions'],
+    }
+
   },
 })

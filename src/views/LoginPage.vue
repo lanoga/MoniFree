@@ -7,14 +7,12 @@ import { useI18n } from 'vue-i18n'
 import httpClient from '@/services/httpClient'
 import useServerValidation from '@/composables/useServerValidation'
 import { useAuth } from '@/stores/auth'
-import { useCollections, COLLECTIONS } from '@/stores/collections'
 
 const router = useRouter()
 const route = useRoute()
 const { handleFormErrors } = useServerValidation()
 const auth = useAuth()
-const collectionStore = useCollections()
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 
 const { errors, handleSubmit, defineInputBinds, resetForm, isSubmitting, setFieldError } = useForm({
   validationSchema: yup.object({
@@ -35,29 +33,31 @@ const onSubmit = handleSubmit(values => {
   return httpClient
     .post('/moni/login', values)
     .then(response => {
-      const { accessToken, userData } = response.data
-
-      auth.setAuthUser({ accessToken, userData })
-
-      resetForm()
-    })
-    .then(auth.getMenus)
-    .then(auth.getPermissions)
-    .then(() => collectionStore.getAllCollections(COLLECTIONS))
-    .then(() => {
       auth.loading = false
-      router.replace(route.query.to ? String(route.query.to) : '/users')
+      const accessToken = response.data.token
+      auth.setAuthUser({ accessToken })
+      getUser()
+      auth.getMenus()
+      router.replace(route.query.to ? String(route.query.to) : '/moni/dashboard')
+      resetForm()
     })
     .catch(error => {
       const { error: formErrors } = error.response?.data || {}
-
       if (formErrors) {
         handleFormErrors(formErrors, setFieldError)
       }
-
       auth.loading = false
     })
-})
+}) 
+  const getUser  = async () => {
+    try {
+      const { userData  } = await httpClient.get(`/moni/users${0}`)
+      auth.setUser({ userData })
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
 </script>
 
 <template>
